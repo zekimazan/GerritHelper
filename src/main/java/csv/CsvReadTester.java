@@ -195,7 +195,7 @@ public class CsvReadTester {
 				}
 				builder.append(patchsets + ",").append(review.getNumberOfFilesInPatch() + ",");
 				builder.append(review.getInlineComments() + ",").append(review.getAddFiles() + ",")
-						.append(review.getModFÝles() + ",").append(review.getDelFiles() + ",");
+						.append(review.getModFiles() + ",").append(review.getDelFiles() + ",");
 				builder.append(review.getRenamedFiles() + ",").append(review.getDeleteLOC() + ",")
 						.append(review.getAddLOC() + "\n");
 			}
