@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,6 +50,51 @@ public class GerritDownloader {
 		}
 
 		return result.toString().substring(6, result.length() - 2);
+	}
+
+	public ArrayList<String> getChangedFiles(String urlToRead, int change_ID, int revisionNumber) {
+		ArrayList<String> files = new ArrayList<String>();
+		// "https://gerrit.wikimedia.org/r/changes/356858/revisions/1/files/"
+
+		StringBuilder result = new StringBuilder();
+		URL url;
+		HttpURLConnection conn;
+		BufferedReader rd;
+		String line;
+		try {
+			url = new URL(urlToRead + change_ID + "/revisions/" + revisionNumber + "/files/");
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			int responseCode = conn.getResponseCode();
+			if (responseCode != HttpURLConnection.HTTP_OK) {
+				System.out.println("HTTP Code : " + responseCode + "\t at ChangeID : " + change_ID);
+				return files;
+			}
+
+			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			while ((line = rd.readLine()) != null) {
+				result.append(line + "\n");
+			}
+			rd.close();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String jsonResult = result.toString().substring(5, result.length() - 1);
+		JSONObject obj = null;
+		try {
+			obj = new JSONObject(jsonResult);
+		} catch (Exception e) {
+			System.out.println("Exception occured with text : \n" + jsonResult);
+			e.printStackTrace();
+		}
+		
+		for(String key : obj.keySet()) {
+			files.add(key);
+		}
+
+		return files;
 	}
 
 	public String getFile(String urlToRead, int change_ID, int revision, String fileName, boolean isBase) {
@@ -117,7 +163,7 @@ public class GerritDownloader {
 
 		try {
 			filePath = URLEncoder.encode(filePath, "UTF-8");
-			url = new URL(urlToRead + "/" + change_ID + "/revisions/" + revision + "/files/" + filePath + "/content"
+			url = new URL(urlToRead + change_ID + "/revisions/" + revision + "/files/" + filePath + "/content"
 					+ ((isParent) ? "?parent=1" : ""));
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");

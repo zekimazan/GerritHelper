@@ -1,7 +1,10 @@
 package csv;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -9,13 +12,16 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Set;
 
+import org.apache.commons.codec.binary.Base64;
+
 import download.GerritDownloader;
 import json.JSONParser;
 
 public class CsvReadTester {
-	static String memberFileName = "C:\\Users\\Zeki\\Desktop\\Bil 570\\project\\android-DefinedDataset-20120128\\Reviewers.csv";
-	static String reviewFileName = "C:\\Users\\Zeki\\Desktop\\Bil 570\\project\\android-DefinedDataset-20120128\\Reviews.csv";
-	static String outFileName = "C:\\Users\\Zeki\\Desktop\\GerritAndroidDataset.csv";
+	static String memberFileName = "data\\Reviewers.csv";
+	static String reviewFileName = "data\\Reviews.csv";
+	static String outFileName = "data\\GerritAndroidDataset.csv";
+	static String outputDir = "target/java-classes/";
 	static LinkedHashMap<Integer, Member> memberMap = new LinkedHashMap<Integer, Member>();
 	static LinkedHashMap<Integer, Review> reviewMap = new LinkedHashMap<Integer, Review>();
 	static LinkedHashMap<String, LinkedList<Integer>> branchCounter = new LinkedHashMap<String, LinkedList<Integer>>();
@@ -23,7 +29,7 @@ public class CsvReadTester {
 
 	static final int MINIMUMREVIEW = 100;
 	static final int LOCTRASHOLD = 500;
-	static final double FILE_COUNT_TRESHOLD = 0.6;
+	static final double FILE_COUNT_TRESHOLD = 0.5;
 
 	public static void main(String[] args) {
 		CsvReadTester tester = new CsvReadTester();
@@ -35,22 +41,23 @@ public class CsvReadTester {
 	}
 
 	public boolean isMostlyJava(Review review) {
+		// TODO remove after
+		if(review.getChangeId() < 21063)
+			return false;
+		
+		
 		GerritDownloader downloader = new GerritDownloader();
 		String url = "https://android-review.googlesource.com/changes/";
 
 		ArrayList<String> changedFiles = new ArrayList<String>();
-		String unparsedString = downloader.getChangeSet(url, review.getChangeId());
+
+		changedFiles = downloader.getChangedFiles(url, review.getChangeId(), 1);
 		try {
-			Thread.sleep(100);
+			Thread.sleep(1000);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		JSONParser jsonParser = new JSONParser();
-//		System.out.println("Change ID : " + review.getChangeId());
-		changedFiles = jsonParser.getChangedFilesFromJSON(unparsedString);
-		if(changedFiles.size() == 0)
+		if (changedFiles.size() == 0)
 			return false;
 		int javaFileCounter = 0;
 		for (String fileName : changedFiles) {
@@ -62,8 +69,66 @@ public class CsvReadTester {
 		if (javaFileCounter / (double) changedFiles.size() >= FILE_COUNT_TRESHOLD) {
 			try {
 				review.files = changedFiles;
-			}
-			catch(NullPointerException e) {
+				for (String fileName : review.files) {
+					String basicName = (fileName.lastIndexOf("/") == -1) ? fileName
+							: fileName.substring(fileName.lastIndexOf("/") + 1);
+					if (basicName.contains(".java")) {
+						String base64String = downloader.getFileContent(url, review.getChangeId(), 1, fileName, true);
+						BufferedOutputStream writer = null;
+						byte[] baseFileContent = Base64.decodeBase64(base64String);
+						File file = new File(outputDir + review.getChangeId() + "_" + 1 + "_old_" + basicName);
+						try {
+							writer = new BufferedOutputStream(new FileOutputStream(file));
+							writer.write(baseFileContent);
+							writer.flush();
+							writer.close();
+							System.out.println("File is written to " + outputDir + review.getChangeId() + "_" + 1
+									+ "_old_" + basicName);
+						} catch (FileNotFoundException e) {
+							System.out.println("Exception with fileName : " + review.getChangeId() + "_" + 1 + "_old_"
+									+ basicName);
+							e.printStackTrace();
+						} catch (IOException e) {
+							System.out.println("IOException at fileName : " + review.getChangeId() + "_" + 1 + "_old_"
+									+ basicName);
+							e.printStackTrace();
+						}
+
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						base64String = downloader.getFileContent(url, review.getChangeId(), 1, fileName, false);
+						byte[] revFileContent = Base64.decodeBase64(base64String);
+						file = new File(outputDir + review.getChangeId() + "_" + 1 + "_new_" + basicName);
+						try {
+							writer = new BufferedOutputStream(new FileOutputStream(file));
+							writer.write(revFileContent);
+							writer.flush();
+							writer.close();
+							System.out.println("File is written to " + outputDir + review.getChangeId() + "_" + 1
+									+ "_new_" + basicName);
+						} catch (FileNotFoundException e) {
+							System.out.println("Exception with fileName : " + review.getChangeId() + "_" + 1 + "_new_"
+									+ basicName);
+							e.printStackTrace();
+						} catch (IOException e) {
+							System.out.println("IOException at fileName : " + review.getChangeId() + "_" + 1 + "_new_"
+									+ basicName);
+							e.printStackTrace();
+						}
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			} catch (NullPointerException e) {
 				System.out.println("Exception occured with Change id : " + review.getChangeId());
 				e.printStackTrace();
 			}
@@ -193,7 +258,7 @@ public class CsvReadTester {
 				continue;
 
 			System.out.println("Change ID : " + r.getChangeId());
-			
+
 			reviewMap.put(r.getChangeId(), r);
 			if (branchCounter.containsKey(r.getBranch())) {
 				branchCounter.get(r.getBranch()).add(r.getChangeId());
