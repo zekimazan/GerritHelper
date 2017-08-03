@@ -17,6 +17,7 @@ import csv.analyzer.AnalyzerDumper;
 import csv.analyzer.ChangeDistillerAnalyzer;
 import csv.analyzer.PatchSetSizeAppender;
 import csv.analyzer.TextFileContentCache;
+import csv.analyzer.VisualDensityAnalyzer;
 import csv.analyzer.WordCounter;
 
 public class SourceCodeCrawler {
@@ -67,12 +68,9 @@ public class SourceCodeCrawler {
 	private static ArrayList<Analyzer> initAnalyzers() {
 		ArrayList<Analyzer> analyzers = new ArrayList<Analyzer>();
 
-		ChangeDistillerAnalyzer changeDistillerAnalyzer =
-				new ChangeDistillerAnalyzer();
-		analyzers.add(changeDistillerAnalyzer);
-
-		WordCounter wordCounter = new WordCounter();
-		analyzers.add(wordCounter);
+		analyzers.add(new ChangeDistillerAnalyzer());
+		analyzers.add(new WordCounter());
+		analyzers.add(new VisualDensityAnalyzer()); 
 
 		LinkedHashMap<Integer,Integer> patchSetSizeMap =
 				getChangeIdToMetadataMap();

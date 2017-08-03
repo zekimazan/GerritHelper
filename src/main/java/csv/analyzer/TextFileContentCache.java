@@ -7,7 +7,7 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 public class TextFileContentCache {
-	Map<File, String> textFileContentCache =
+	protected Map<File, String> textFileContentCache =
 			new TreeMap<File, String>();
 	
 	public String readFile(File file) {
