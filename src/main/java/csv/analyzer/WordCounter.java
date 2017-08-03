@@ -19,7 +19,7 @@ public class WordCounter extends Analyzer {
 	@Override
 	public void _analyzeFile(
 			int changeId, File origin, File proposed,
-			TextFileContentCache textFileContentCache) {
+			TextFileCache textFileContentCache) {
 		diff_match_patch dmp = new diff_match_patch();
 
 		// TODO(cgerede): Reading the all content is not memory efficient.

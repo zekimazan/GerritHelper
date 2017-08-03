@@ -13,7 +13,7 @@ public class VisualDensityAnalyzerTest extends TestCase {
   }
 
   public void testOneInsertion() {
-    TextFileContentCache cache = new TextFileContentCache();
+    TextFileCache cache = new TextFileCache();
     File origin = new File("origin");
     File proposed = new File("proposed");
     cache.textFileContentCache.put(origin, "did not change.did not change.");
@@ -33,7 +33,7 @@ public class VisualDensityAnalyzerTest extends TestCase {
   }
 
   public void testMultipleLines() {
-    TextFileContentCache cache = new TextFileContentCache();
+    TextFileCache cache = new TextFileCache();
     File origin = new File("origin");
     File proposed = new File("proposed");
     cache.textFileContentCache.put(origin, "");
@@ -57,7 +57,7 @@ public class VisualDensityAnalyzerTest extends TestCase {
 
 
   public void testWithMultipleChangeIds() {
-    TextFileContentCache cache = new TextFileContentCache();
+    TextFileCache cache = new TextFileCache();
     File origin = new File("origin");
     File proposed = new File("proposed");
     cache.textFileContentCache.put(origin, "");

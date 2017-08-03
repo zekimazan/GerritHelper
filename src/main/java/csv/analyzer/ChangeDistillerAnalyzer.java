@@ -23,7 +23,7 @@ public class ChangeDistillerAnalyzer extends Analyzer {
 
 	public void _analyzeFile(
 			int id, File origin, File proposed,
-			TextFileContentCache textFileContentCache) {
+			TextFileCache textFileContentCache) {
 		FileDistiller distiller =
 				ChangeDistiller.createFileDistiller(Language.JAVA);
 		try {

@@ -9,7 +9,7 @@ public abstract class Analyzer {
 
 	public final void analyzeFile(
 			int changeId, File origin, File proposed,
-			TextFileContentCache textFileContentCache) {
+			TextFileCache textFileContentCache) {
 		mTotalFileCount++;
 		_analyzeFile(changeId, origin, proposed, textFileContentCache);
 	}
@@ -26,7 +26,7 @@ public abstract class Analyzer {
 	public abstract void _beforeAnalyzeChange(int changeId);
 	public abstract void _analyzeFile(
 			int changeId, File origin, File proposed,
-			TextFileContentCache textFileContentCache);
+			TextFileCache textFileContentCache);
 	public abstract void _afterAnalyzeChange(int changeId);
 	public abstract AnalyzerDumper getDumper();
 }

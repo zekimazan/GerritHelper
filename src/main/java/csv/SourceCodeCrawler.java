@@ -15,8 +15,9 @@ import org.apache.commons.io.FileUtils;
 import csv.analyzer.Analyzer;
 import csv.analyzer.AnalyzerDumper;
 import csv.analyzer.ChangeDistillerAnalyzer;
+import csv.analyzer.MaxScopeCounter;
 import csv.analyzer.PatchSetSizeAppender;
-import csv.analyzer.TextFileContentCache;
+import csv.analyzer.TextFileCache;
 import csv.analyzer.VisualDensityAnalyzer;
 import csv.analyzer.WordCounter;
 
@@ -36,7 +37,7 @@ public class SourceCodeCrawler {
 				getChangeIdToFilesMap(files);
 
 		ArrayList<Analyzer> analyzers = initAnalyzers();
-		TextFileContentCache textFileContentCache = new TextFileContentCache();
+		TextFileCache textFileContentCache = new TextFileCache();
 
 		for (int id : changeIdToFilesMap.keySet()) {
 			for (Analyzer analyzer : analyzers) {
@@ -71,6 +72,7 @@ public class SourceCodeCrawler {
 		analyzers.add(new ChangeDistillerAnalyzer());
 		analyzers.add(new WordCounter());
 		analyzers.add(new VisualDensityAnalyzer()); 
+		analyzers.add(new MaxScopeCounter());
 
 		LinkedHashMap<Integer,Integer> patchSetSizeMap =
 				getChangeIdToMetadataMap();

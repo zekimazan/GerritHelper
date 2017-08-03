@@ -16,7 +16,7 @@ public class DeepestScopeCounter extends Analyzer {
 
   @Override
   public void _analyzeFile(int changeId, File origin, File proposed,
-      TextFileContentCache textFileContentCache) {
+      TextFileCache textFileContentCache) {
     // TODO Auto-generated method stub
     
   }

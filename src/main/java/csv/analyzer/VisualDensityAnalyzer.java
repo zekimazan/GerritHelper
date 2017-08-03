@@ -28,12 +28,9 @@ public class VisualDensityAnalyzer extends Analyzer {
 
   @Override
   public void _analyzeFile(int changeId, File origin, File proposed,
-      TextFileContentCache textFileContentCache) {
-    String originText = textFileContentCache.readFile(origin);
-    String proposedText = textFileContentCache.readFile(proposed);
-    diff_match_patch diffUtil = new diff_match_patch();
+      TextFileCache textFileCache) {
     int maxRatio = 0;
-    for (Diff diff : diffUtil.diff_main(originText, proposedText)) {
+    for (Diff diff : textFileCache.getDiff(origin, proposed)) {
       if (diff.operation.equals(Operation.INSERT)) {
         int numberOfLines = countLines(diff.text);
         int ratio = 100;
