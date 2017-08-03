@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 import csv.analyzer.Analyzer;
 import csv.analyzer.AnalyzerDumper;
 import csv.analyzer.ChangeDistillerAnalyzer;
+import csv.analyzer.DeepestScopeCounter;
 import csv.analyzer.MaxScopeCounter;
 import csv.analyzer.PatchSetSizeAppender;
 import csv.analyzer.TextFileCache;
@@ -73,6 +74,7 @@ public class SourceCodeCrawler {
 		analyzers.add(new WordCounter());
 		analyzers.add(new VisualDensityAnalyzer()); 
 		analyzers.add(new MaxScopeCounter());
+		analyzers.add(new DeepestScopeCounter());
 
 		LinkedHashMap<Integer,Integer> patchSetSizeMap =
 				getChangeIdToMetadataMap();
