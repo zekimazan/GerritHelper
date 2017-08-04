@@ -1,8 +1,10 @@
 package csv.analyzer;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import csv.analyzer.thirdparty.diff_match_patch.Diff;
@@ -87,6 +89,21 @@ public class IndendationVarianceAnalyzer extends Analyzer {
 				if (indentationBuckets.size() > maxBucketCount) {
 					indentationBucketCount.put(changeId, indentationBuckets.size());
 				}
+
+				if (!indentationBuckets.isEmpty()) {
+					Set<Integer> buckets = indentationBuckets.keySet();
+					int min = Collections.min(buckets);
+					int max = Collections.max(buckets);
+					int variance = max - min;
+					int maxVariance = -1;
+					if (indentationVariance.containsKey(changeId)) {
+						maxVariance = indentationVariance.get(changeId);
+					}
+					if (variance > maxVariance) {
+						indentationVariance.put(changeId, variance);
+					}
+				}
+
 				indentationBuckets.clear();
 			}
 		}
@@ -100,11 +117,12 @@ public class IndendationVarianceAnalyzer extends Analyzer {
 		return new AnalyzerDumper() {
 			
 			public String getColumns() {
-				return "IndentationBucketCount";
+				return "IndentationBucketCount, IndentationVariance";
 			}
 			
 			public void appendDataForChange(int id, StringBuffer data) {
-				data.append(",").append(indentationBucketCount.get(id));
+				data.append(",").append(indentationBucketCount.get(id))
+					.append(",").append(indentationVariance.get(id));
 			}
 		};
 	}

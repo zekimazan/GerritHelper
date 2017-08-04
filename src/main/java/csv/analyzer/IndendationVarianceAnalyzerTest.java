@@ -12,7 +12,7 @@ public class IndendationVarianceAnalyzerTest extends TestCase {
 		analyzer.getDumper().getColumns().equals("IndentationBucketCount");
 	}
 
-	public void testSimple() {
+	public void testSingleInsertion() {
 		TextFileCache cache = new TextFileCache();
 		File origin = new File("origin");
 		File proposed = new File("proposed");
@@ -31,7 +31,7 @@ public class IndendationVarianceAnalyzerTest extends TestCase {
 
 		StringBuffer data = new StringBuffer();
 		analyzer.getDumper().appendDataForChange(CHANGE_ID, data);
-		assertEquals(",4", data.toString());  // Buckets are: 4, 6, 0, 3
+		assertEquals(",4,6", data.toString());  // Buckets are: 4, 6, 0, 3
 	}
 
 	public void testNoIndentation() {
@@ -51,7 +51,7 @@ public class IndendationVarianceAnalyzerTest extends TestCase {
 
 		StringBuffer data = new StringBuffer();
 		analyzer.getDumper().appendDataForChange(CHANGE_ID, data);
-		assertEquals(",1", data.toString());  // Buckets are: 0
+		assertEquals(",1,0", data.toString());  // Buckets are: 0
 	}
 
 	public void testSingleLine() {
@@ -72,7 +72,7 @@ public class IndendationVarianceAnalyzerTest extends TestCase {
 
 		StringBuffer data = new StringBuffer();
 		analyzer.getDumper().appendDataForChange(CHANGE_ID, data);
-		assertEquals(",1", data.toString());  // Buckets are: 0
+		assertEquals(",1,0", data.toString());  // Buckets are: 0
 	}
 
 	public void testMultipleLinesAndDiffs() {
@@ -94,6 +94,6 @@ public class IndendationVarianceAnalyzerTest extends TestCase {
 
 		StringBuffer data = new StringBuffer();
 		analyzer.getDumper().appendDataForChange(CHANGE_ID, data);
-		assertEquals(",2", data.toString());  // Buckets are: 1, 2
+		assertEquals(",1,0", data.toString());  // Max bucket is: 1
 	}
 }
