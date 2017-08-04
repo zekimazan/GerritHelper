@@ -32,15 +32,16 @@ public class VisualDensityAnalyzer extends Analyzer {
 		int maxRatio = 0;
 		for (Diff diff : textFileCache.getDiff(origin, proposed)) {
 			if (diff.operation.equals(Operation.INSERT)) {
-				int numberOfLines = countLines(diff.text);
+				int numberOfNewLines = countNewLineCharacters(diff.text);
 				int ratio = 100;
 				// Remove new line chars from length.
-				int nonWhiteSpaceTextLength = diff.text.length() - numberOfLines + 1;
+				int nonWhiteSpaceTextLength =
+						diff.text.length() - numberOfNewLines;
 				// The code may not follow a rule restricting the column size as we
 				// expect.
-				if (nonWhiteSpaceTextLength < numberOfLines * MAX_COLUMN_COUNT) {
-					ratio =
-							(100 * nonWhiteSpaceTextLength) / (numberOfLines * MAX_COLUMN_COUNT);
+				int fullAmount = (numberOfNewLines + 1) * MAX_COLUMN_COUNT;
+				if (nonWhiteSpaceTextLength < fullAmount) {
+					ratio = (100 * nonWhiteSpaceTextLength) / fullAmount;
 				}
 				if (ratio > maxRatio) {
 					maxRatio = ratio;
@@ -75,8 +76,8 @@ public class VisualDensityAnalyzer extends Analyzer {
 		};
 	}
 
-	private int countLines(String text) {
-		int counter = 1;
+	private int countNewLineCharacters(String text) {
+		int counter = 0;
 		for (int i = 0; i < text.length(); i++) {
 			if (text.charAt(i) == '\n') {
 				counter++;

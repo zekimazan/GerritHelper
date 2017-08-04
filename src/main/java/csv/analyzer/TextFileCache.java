@@ -9,6 +9,7 @@ import java.util.TreeMap;
 
 import csv.analyzer.thirdparty.diff_match_patch;
 import csv.analyzer.thirdparty.diff_match_patch.Diff;
+import csv.analyzer.thirdparty.diff_match_patch.LinesToCharsResult;
 
 public class TextFileCache {
 	protected Map<File, String> textFileContentCache =
@@ -16,8 +17,8 @@ public class TextFileCache {
 	// Origin file to diff between origin and proposed (assumes there is only
 	// one proposed)
 	protected Map<File, LinkedList<Diff>> textFileDiffCache =
-        new TreeMap<File, LinkedList<Diff>>();
-	
+			new TreeMap<File, LinkedList<Diff>>();
+
 	public String readFile(File file) {
 		String content = textFileContentCache.get(file);
 		if (content != null) {
@@ -40,17 +41,19 @@ public class TextFileCache {
 	}
 
 	public LinkedList<Diff> getDiff(File origin, File proposed) {
-	  if (textFileDiffCache.containsKey(origin)) {
-	    return textFileDiffCache.get(origin);
-	  }
+		if (textFileDiffCache.containsKey(origin)) {
+			return textFileDiffCache.get(origin);
+		}
 
-	  diff_match_patch diffUtil = new diff_match_patch();
-	  String originText = readFile(origin);
-	  String proposedText = readFile(proposed);
+		diff_match_patch diffUtil = new diff_match_patch();
+		String originText = readFile(origin);
+		String proposedText = readFile(proposed);
 
-	  LinkedList<Diff> diffs = diffUtil.diff_main(originText, proposedText);
-	  textFileDiffCache.put(origin, diffs);
-	  return diffs;
+		long deadline = System.currentTimeMillis() + (long) (1.0f * 1000);
+		LinkedList<Diff> diffs = diffUtil.diff_lineMode(
+				originText, proposedText, deadline);
+		textFileDiffCache.put(origin, diffs);
+		return diffs;
 	}
 
 	public void clear() {

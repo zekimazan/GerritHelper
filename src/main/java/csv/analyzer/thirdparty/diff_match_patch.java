@@ -89,7 +89,7 @@ public class diff_match_patch {
    * Internal class for returning results from diff_linesToChars().
    * Other less paranoid languages just use a three-element array.
    */
-  protected static class LinesToCharsResult {
+  public static class LinesToCharsResult {
     protected String chars1;
     protected String chars2;
     protected List<String> lineArray;
@@ -291,7 +291,7 @@ public class diff_match_patch {
    * @param deadline Time when the diff should be complete by.
    * @return Linked List of Diff objects.
    */
-  private LinkedList<Diff> diff_lineMode(String text1, String text2,
+  public LinkedList<Diff> diff_lineMode(String text1, String text2,
                                          long deadline) {
     // Scan the text on a line-by-line basis first.
     LinesToCharsResult b = diff_linesToChars(text1, text2);
@@ -508,7 +508,7 @@ public class diff_match_patch {
    *     the List of unique strings.  The zeroth element of the List of
    *     unique strings is intentionally blank.
    */
-  protected LinesToCharsResult diff_linesToChars(String text1, String text2) {
+  public LinesToCharsResult diff_linesToChars(String text1, String text2) {
     List<String> lineArray = new ArrayList<String>();
     Map<String, Integer> lineHash = new HashMap<String, Integer>();
     // e.g. linearray[4] == "Hello\n"
@@ -565,7 +565,7 @@ public class diff_match_patch {
    * @param diffs LinkedList of Diff objects.
    * @param lineArray List of unique strings.
    */
-  protected void diff_charsToLines(LinkedList<Diff> diffs,
+  public void diff_charsToLines(LinkedList<Diff> diffs,
                                   List<String> lineArray) {
     StringBuilder text;
     for (Diff diff : diffs) {

@@ -79,9 +79,17 @@ public class IndendationVarianceAnalyzer extends Analyzer {
 						lineBeginning = true;
 					}
 				}
+				
+				int maxBucketCount = -1;
+				if (indentationBucketCount.containsKey(changeId)) {
+					maxBucketCount = indentationBucketCount.get(changeId);
+				}
+				if (indentationBuckets.size() > maxBucketCount) {
+					indentationBucketCount.put(changeId, indentationBuckets.size());
+				}
+				indentationBuckets.clear();
 			}
 		}
-		indentationBucketCount.put(changeId, indentationBuckets.size());
 	}
 
 	@Override

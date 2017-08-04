@@ -16,10 +16,11 @@ public class VisualDensityAnalyzerTest extends TestCase {
 		TextFileCache cache = new TextFileCache();
 		File origin = new File("origin");
 		File proposed = new File("proposed");
-		cache.textFileContentCache.put(origin, "did not change.did not change.");
+		cache.textFileContentCache.put(
+				origin, "did not change.\ndid not change.");
 		cache.textFileContentCache.put(proposed,
-				"did not change." +
-						"inserted content with forty characters.." +
+				"did not change.\n" +
+						"inserted content with forty characters..\n" +
 				"did not change.");
 
 		analyzer._beforeAnalyzeChange(CHANGE_ID);
@@ -28,8 +29,8 @@ public class VisualDensityAnalyzerTest extends TestCase {
 
 		StringBuffer data = new StringBuffer();
 		analyzer.getDumper().appendDataForChange(CHANGE_ID, data);
-		// We expect 50 since 50 = (100 x 40) / 80.
-		assertEquals(",50", data.toString());
+		// We expect 25 since 25 = (100 x 40) / (2 x 80).
+		assertEquals(",25", data.toString());
 	}
 
 	public void testMultipleLines() {
