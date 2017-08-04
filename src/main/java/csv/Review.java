@@ -30,7 +30,7 @@ public class Review {
 	private int numberOfFilesInPatch;
 	private int inlineComments;
 	private int addFiles;
-	private int modFÝles;
+	private int modFiles;
 	private int delFiles;
 	private int renamedFiles;
 	private int deleteLOC;
@@ -63,7 +63,7 @@ public class Review {
 		this.numberOfFilesInPatch = Integer.valueOf(args[16]);
 		this.inlineComments = Integer.valueOf(args[17]);
 		this.addFiles = Integer.valueOf(args[18]);
-		this.modFÝles = Integer.valueOf(args[19]);
+		this.modFiles = Integer.valueOf(args[19]);
 		this.delFiles = Integer.valueOf(args[20]);
 		this.renamedFiles = Integer.valueOf(args[21]);
 		this.deleteLOC = Integer.valueOf(args[22]);
@@ -223,12 +223,12 @@ public class Review {
 		this.addFiles = addFiles;
 	}
 
-	public int getModFÝles() {
-		return modFÝles;
+	public int getModFiles() {
+		return modFiles;
 	}
 
-	public void setModFÝles(int modFÝles) {
-		this.modFÝles = modFÝles;
+	public void setModFiles(int modFiles) {
+		this.modFiles = modFiles;
 	}
 
 	public int getDelFiles() {
