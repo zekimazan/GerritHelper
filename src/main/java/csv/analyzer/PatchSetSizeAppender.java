@@ -16,7 +16,7 @@ public class PatchSetSizeAppender extends Analyzer {
 
 	@Override
 	public void _analyzeFile(int changeId, File origin, File proposed,
-	        TextFileCache textFileContentCache) {}
+			TextFileCache textFileContentCache) {}
 
 	@Override
 	public void _beforeAnalyzeChange(int arg0) {}
@@ -36,4 +36,8 @@ public class PatchSetSizeAppender extends Analyzer {
 			}
 		};
 	}
+	
+	@Override
+	public void reset() {}
+
 }

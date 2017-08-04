@@ -100,4 +100,9 @@ public class ChangeDistillerAnalyzer extends Analyzer {
 			}
 		};
 	}
+
+	@Override
+	public void reset() {
+		sourceChangeMap.clear();
+	}
 }

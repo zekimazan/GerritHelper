@@ -58,4 +58,8 @@ public class WordCounter extends Analyzer {
 		};
 	}
 
+	@Override
+	public void reset() {
+		changeIdToWordCount.clear();
+	}
 }

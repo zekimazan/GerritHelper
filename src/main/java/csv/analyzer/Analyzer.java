@@ -15,6 +15,7 @@ public abstract class Analyzer {
 	}
 	
 	public final void beforeAnalyzeChange(int changeId) {
+		reset();
 		mTotalFileCount = 0;
 		_beforeAnalyzeChange(changeId);
 	}
@@ -29,4 +30,5 @@ public abstract class Analyzer {
 			TextFileCache textFileContentCache);
 	public abstract void _afterAnalyzeChange(int changeId);
 	public abstract AnalyzerDumper getDumper();
+	public abstract void reset();
 }
