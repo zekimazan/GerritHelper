@@ -9,7 +9,8 @@ public class IndendationVarianceAnalyzerTest extends TestCase {
 	final int CHANGE_ID = 1, CHANGE_ID_2 = 2;
 
 	public void testGetColumns() {
-		analyzer.getDumper().getColumns().equals("IndentationBucketCount");
+		assertEquals(
+				"IndentationBucketCount", analyzer.getDumper().getColumns());
 	}
 
 	public void testSingleInsertion() {
